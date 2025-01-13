@@ -12,8 +12,7 @@ import * as utils from './cacheUtils'
 import {SocketTimeout} from './constants'
 import {DownloadOptions} from '../options'
 import {retryHttpClientResponse} from './requestUtils'
-
-import {AbortController} from '@azure/abort-controller'
+import AbortController from 'abort-controller'
 
 /**
  * Pipes the body of a HTTP response to a stream
@@ -457,22 +456,20 @@ export async function downloadCacheStorageSDK(
  * @param s3BucketName: the name of bucket in AWS S3
  */
 export async function downloadCacheStorageS3(
- key: string,
- archivePath: string,
- s3Options: S3ClientConfig,
- s3BucketName: string
+  key: string,
+  archivePath: string,
+  s3Options: S3ClientConfig,
+  s3BucketName: string
 ): Promise<void> {
   const s3client = new S3Client(s3Options)
   const param = {
     Bucket: s3BucketName,
-    Key: key,
+    Key: key
   }
 
   const response = await s3client.send(new GetObjectCommand(param))
   if (!response.Body) {
-    throw new Error(
-      `Incomplete download. response.Body is undefined from S3.`
-    )
+    throw new Error(`Incomplete download. response.Body is undefined from S3.`)
   }
 
   const fileStream = fs.createWriteStream(archivePath)

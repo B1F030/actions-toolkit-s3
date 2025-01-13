@@ -124,7 +124,7 @@ async function getCacheEntryS3(
 
   const s3client = new S3Client(s3Options)
 
-  let contents: _content[] = new Array()
+  const contents: _content[] = []
   let s3ContinuationToken: string | undefined = undefined
   let count = 0
 
@@ -134,7 +134,7 @@ async function getCacheEntryS3(
 
   for (;;) {
     core.debug(`ListObjects Count: ${count}`)
-    if (s3ContinuationToken != undefined) {
+    if (s3ContinuationToken !== undefined) {
       param.ContinuationToken = s3ContinuationToken
     }
 
@@ -145,7 +145,7 @@ async function getCacheEntryS3(
       throw new Error(`Error from S3: ${e}`)
     }
     if (!response.Contents) {
-      if (contents.length != 0) {
+      if (contents.length !== 0) {
         break
       }
       throw new Error(`Cannot found object in bucket ${s3BucketName}`)
@@ -159,7 +159,7 @@ async function getCacheEntryS3(
       return {
         cacheKey: primaryKey,
         creationTime: found.LastModified.toString(),
-        archiveLocation: "https://s3.amazonaws.com/" // dummy
+        archiveLocation: 'https://s3.amazonaws.com/' // dummy
       }
     }
 
@@ -187,7 +187,7 @@ async function getCacheEntryS3(
     return {
       cacheKey: found.Key,
       creationTime: found.LastModified.toString(),
-      archiveLocation: "https://s3.amazonaws.com/" // dummy
+      archiveLocation: 'https://s3.amazonaws.com/' // dummy
     }
   }
 
@@ -212,7 +212,7 @@ function _searchRestoreKeyEntry(
   notPrimaryKey: string,
   entries: _content[]
 ): _content | null {
-  let matchPrefix: _content[] = new Array()
+  const matchPrefix: _content[] = []
 
   for (const entry of entries) {
     if (entry.Key === notPrimaryKey) {
@@ -231,7 +231,7 @@ function _searchRestoreKeyEntry(
   }
 
   matchPrefix.sort(function (i, j) {
-    if (i.LastModified == undefined || j.LastModified == undefined) {
+    if (i.LastModified === undefined || j.LastModified === undefined) {
       return 0
     }
     if (i.LastModified?.getTime() === j.LastModified?.getTime()) {

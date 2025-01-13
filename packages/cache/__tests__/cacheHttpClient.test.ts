@@ -1,6 +1,7 @@
 import {downloadCache, getCacheVersion} from '../src/internal/cacheHttpClient'
 import {CompressionMethod} from '../src/internal/constants'
 import * as downloadUtils from '../src/internal/downloadUtils'
+import {ArtifactCacheEntry} from '../src/internal/contracts'
 import {DownloadOptions, getDownloadOptions} from '../src/options'
 
 jest.mock('../src/internal/downloadUtils')
@@ -62,8 +63,15 @@ test('downloadCache uses http-client for non-Azure URLs', async () => {
 
   const archiveLocation = 'http://www.actionscache.test/download'
   const archivePath = '/foo/bar'
+  const cacheEntry = {
+    cacheKey: undefined,
+    scope: undefined,
+    cacheVersion: undefined,
+    creationTime: undefined,
+    archiveLocation
+  } as ArtifactCacheEntry
 
-  await downloadCache(archiveLocation, archivePath)
+  await downloadCache(cacheEntry, archivePath)
 
   expect(downloadCacheHttpClientMock).toHaveBeenCalledTimes(1)
   expect(downloadCacheHttpClientMock).toHaveBeenCalledWith(
@@ -91,8 +99,15 @@ test('downloadCache uses storage SDK for Azure storage URLs', async () => {
 
   const archiveLocation = 'http://foo.blob.core.windows.net/bar/baz'
   const archivePath = '/foo/bar'
+  const cacheEntry = {
+    cacheKey: undefined,
+    scope: undefined,
+    cacheVersion: undefined,
+    creationTime: undefined,
+    archiveLocation
+  } as ArtifactCacheEntry
 
-  await downloadCache(archiveLocation, archivePath)
+  await downloadCache(cacheEntry, archivePath)
 
   expect(downloadCacheHttpClientConcurrentMock).toHaveBeenCalledTimes(1)
   expect(downloadCacheHttpClientConcurrentMock).toHaveBeenCalledWith(
@@ -123,8 +138,15 @@ test('downloadCache passes options to download methods', async () => {
   const archiveLocation = 'http://foo.blob.core.windows.net/bar/baz'
   const archivePath = '/foo/bar'
   const options: DownloadOptions = {downloadConcurrency: 4}
+  const cacheEntry = {
+    cacheKey: undefined,
+    scope: undefined,
+    cacheVersion: undefined,
+    creationTime: undefined,
+    archiveLocation
+  } as ArtifactCacheEntry
 
-  await downloadCache(archiveLocation, archivePath, options)
+  await downloadCache(cacheEntry, archivePath)
 
   expect(downloadCacheHttpClientConcurrentMock).toHaveBeenCalledTimes(1)
   expect(downloadCacheHttpClientConcurrentMock).toHaveBeenCalled()
@@ -154,8 +176,15 @@ test('downloadCache uses http-client when overridden', async () => {
     useAzureSdk: false,
     concurrentBlobDownloads: false
   }
+  const cacheEntry = {
+    cacheKey: undefined,
+    scope: undefined,
+    cacheVersion: undefined,
+    creationTime: undefined,
+    archiveLocation
+  } as ArtifactCacheEntry
 
-  await downloadCache(archiveLocation, archivePath, options)
+  await downloadCache(cacheEntry, archivePath, options)
 
   expect(downloadCacheHttpClientMock).toHaveBeenCalledTimes(1)
   expect(downloadCacheHttpClientMock).toHaveBeenCalledWith(

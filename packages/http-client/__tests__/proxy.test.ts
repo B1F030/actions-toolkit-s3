@@ -3,8 +3,7 @@
 import * as http from 'http'
 import * as httpm from '../lib/'
 import * as pm from '../lib/proxy'
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-const proxy = require('proxy')
+import proxy from 'proxy'
 
 let _proxyConnects: string[]
 let _proxyServer: http.Server
