@@ -31,7 +31,7 @@ export async function createTempDirectory(): Promise<string> {
         baseLocation = '/home'
       }
     }
-    tempDirectory = path.join(baseLocation, 'actions', 'temp')
+    tempDirectory = path.join(baseLocation, 'runner', 'temp')
   }
 
   const dest = path.join(tempDirectory, uuidV4())
@@ -125,10 +125,10 @@ export async function getGnuTarPathOnWindows(): Promise<string> {
 
 export async function isZstdInstalled(): Promise<boolean> {
   try {
-    await io.which('zstd', true);
-    return true;
+    await io.which('zstd', true)
+    return true
   } catch (error) {
-    return false;
+    return false
   }
 }
 
